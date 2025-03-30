@@ -5,16 +5,34 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"shifu/rssFetcher"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
+
+	newsItems, err := rssFetcher.FetchFacebookNews()
+	if err != nil {
+		log.Printf("Error fetching facebook news: %+v\n", err)
+		http.Error(w, "Error fetching news", http.StatusInternalServerError)
+		return
+	}
+
+	// log.Printf("news items : %+v\n", newsItems)
+
 	tmpl, err := template.ParseFiles("template.html")
 	if err != nil {
 		log.Printf("Error loading template : %+v\n", err)
 		http.Error(w, "Error loading template", http.StatusInternalServerError)
 		return
 	}
-	tmpl.Execute(w, nil)
+
+	err = tmpl.Execute(w, map[string]interface{}{"NewsItems": newsItems})
+	if err != nil {
+		log.Printf("Error executing template : %+v\n", err)
+		http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		return
+	}
 }
 
 func main() {

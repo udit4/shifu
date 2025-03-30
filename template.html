@@ -11,9 +11,13 @@
         <h1 class="text-2xl font-bold mb-4">News Aggregator</h1>
         
         <div class="mt-4">
-            <h2 class="text-xl font-semibold">Facebook</h2>
+            <h2 class="text-xl font-semibold text-blue-600 mb-6">Facebook News</h2>
             <ul class="list-disc pl-6">
-                <li>2024-03-30 - Facebook AI Enhancements : <a href="https://news.facebook.com/ai" class="text-blue-600" target="_blank">link</a></li>
+                {{range .NewsItems}}
+                <li><span class="font-semibold">{{.PubDate}}</span> - {{.Title}} : <a href="{{.Link}}" class="text-blue-600" target="_blank">Link</a></li>
+                {{else}}
+                <li>No news available at the moment.</li>
+                {{end}}
             </ul>
         </div>
     </div>
